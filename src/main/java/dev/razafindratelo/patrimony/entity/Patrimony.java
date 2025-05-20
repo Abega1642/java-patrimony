@@ -28,9 +28,11 @@ public class Patrimony {
         projectedPossessions = projectedPossessions.stream().map(p -> p.futureProjection(futureDate))
                 .collect(Collectors.toSet());
 
-        setAtTheDate(futureDate);
-        setPossessions(projectedPossessions);
-        return this;
+        return new Patrimony(
+                getOwner(),
+                futureDate,
+                projectedPossessions
+        );
     }
 
     public double getFutureValueOfPatrimony(LocalDate futureDate) {
@@ -39,6 +41,7 @@ public class Patrimony {
         var futureProjection = futureProjection(futureDate);
 
         var totalValue = futureProjection.getPossessions().stream()
+                .filter(p -> !(p instanceof LifeSpending))
                 .map(Possession::getValue)
                 .reduce(zero, Money::add);
 

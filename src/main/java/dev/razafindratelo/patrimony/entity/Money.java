@@ -9,7 +9,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-@ToString
 public class Money {
     private final Double montant;
     private final Devise devise;
@@ -17,6 +16,10 @@ public class Money {
     private Money(Devise devise) {
         this.montant = 0.0;
         this.devise = devise;
+    }
+
+    public static Money zeroValueOf(Devise devise) {
+        return new Money(devise);
     }
 
     public Money add(Money money) {
@@ -43,7 +46,11 @@ public class Money {
         );
     }
 
-    public static Money zeroValueOf(Devise devise) {
-        return new Money(devise);
+    @Override
+    public String toString() {
+        return "Money {"+
+               "\n \t montant= " + montant +
+               "\n \t devise= " + devise +
+                "}";
     }
 }

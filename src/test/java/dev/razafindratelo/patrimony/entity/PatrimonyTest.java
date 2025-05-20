@@ -1,8 +1,8 @@
 package dev.razafindratelo.patrimony.entity;
 
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,7 +12,7 @@ class PatrimonyTest {
     @Test
     void test_patrimony_value_after_one_year() {
         var ilo = new Agent("Ilo");
-        var usedDate = LocalDate.of(2024, 4, 13);
+        var usedDate = LocalDate.of(2024, 5, 13);
 
 
         var currentAccount = new Account(
@@ -76,12 +76,14 @@ class PatrimonyTest {
         var subject = new Patrimony(
             ilo,
             null,
-                Set.of(savingsAccount, lifeSpending, cash, currentAccount, computer, clothes)
+                Set.of(cash, savingsAccount, currentAccount, computer, clothes, lifeSpending)
         );
 
-        var expected = 3_400_980d;
+        var expected = 3_159_205.4794520548d;
 
-        var actual = subject.getFutureValueOfPatrimony(LocalDate.of(2026, 6, 24));
+        var evaluationDate = LocalDate.of(2024, 6, 26);
+
+        var actual = subject.getFutureValueOfPatrimony(evaluationDate);
 
         assertEquals(expected, actual);
 

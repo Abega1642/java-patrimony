@@ -2,14 +2,13 @@ package dev.razafindratelo.patrimony.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
 public final class Account extends Funds {
     private final AccountType accountType;
     private final double interestRate;
@@ -64,22 +63,22 @@ public final class Account extends Funds {
     public Possession futureProjection(LocalDate futureValue) {
         var zero = Money.zeroValueOf(getValue().getDevise());
 
-        if (futureValue.isBefore(getCreationDate()))
+        long daysBetweenCreationDateAndFutureValue = ChronoUnit.DAYS.between(this.getCreationDate(), futureValue);
+
+        if (futureValue.isBefore(getCreationDate())) {
             return new Material(getName(), zero, futureValue, getDescription(), getInterestRate(), getCreationDate());
+        }
 
-        int differenceBetweenYear = futureValue.getYear() - getCreationDate().getYear();
-
-        var lifeSpendingTotalValue = financedLifeSpending.stream().map(lf -> lf.futureProjection(futureValue).getValue())
+        var lifeSpendingTotalValue = financedLifeSpending.stream()
+                .map(lf -> lf.futureProjection(futureValue).getValue())
                 .reduce(zero, Money::add);
 
         if (accountType.equals(AccountType.SAVINGS_ACCOUNT)) {
-            double generalInterest =  getValue().getMontant() * (1 - (interestRate/100)) * differenceBetweenYear;
+            double generalInterest =  getValue().getMontant() * (interestRate/100) * ((double) daysBetweenCreationDateAndFutureValue / 365);
+
             var newAmount = new Money(getValue().getMontant() + generalInterest, getValue().getDevise());
 
-
-
             var finalTotalAmount = newAmount.subtract(lifeSpendingTotalValue);
-
             return new Account(
                     getName(),
                     finalTotalAmount,
@@ -102,5 +101,14 @@ public final class Account extends Funds {
                 interestRate,
                 this.financedLifeSpending
         );
+    }
+
+    @Override
+    public String toString() {
+        return "Account {" +
+                "\n \t accountType= " + accountType +
+                "\n \t interestRate= " + interestRate +
+                "\n \t financedLifeSpending= " + financedLifeSpending +
+                "}";
     }
 }

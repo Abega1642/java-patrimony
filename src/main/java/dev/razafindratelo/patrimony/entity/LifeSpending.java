@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ToString(callSuper = true)
 public final class LifeSpending extends Possession {
     private final Account financier;
     private final int operationDay;
@@ -39,7 +38,9 @@ public final class LifeSpending extends Possession {
         var date = LocalDate.of(startOfThePunctuation.getYear(), startOfThePunctuation.getMonth(), operationDay);
 
         while (date.isBefore(futureValue)) {
-            occurence.add(date);
+            if (startOfThePunctuation.isBefore(date))
+                occurence.add(date);
+
             date = date.plusMonths(1);
         }
 
@@ -59,5 +60,15 @@ public final class LifeSpending extends Possession {
                 getStartOfThePunctuation()
         );
 
+    }
+
+    @Override
+    public String toString() {
+        return "LifeSpending { "+
+                "\n \t financier= " + financier +
+                "\n \t operationDay= " + operationDay +
+                "\n \t startOfThePunctuation= " + startOfThePunctuation +
+                "\n \t super= " + super.toString() +
+                "}";
     }
 }
