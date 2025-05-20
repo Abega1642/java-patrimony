@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @ToString
-public abstract sealed class Possession permits Account, LifeSpending, Material {
+public abstract sealed class Possession permits Funds, LifeSpending, Material {
     private final String name;
     private final Money value;
     private final LocalDate atTheDate;

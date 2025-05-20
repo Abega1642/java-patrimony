@@ -20,9 +20,9 @@ class AccountTest {
                 AMOUNT_AR,
                 null,
                 "A current account",
+                LocalDate.now(),
                 AccountType.CURRENT_ACCOUNT,
                 0,
-                LocalDate.now(),
                 Set.of()
         );
 
@@ -35,9 +35,9 @@ class AccountTest {
                 expectedValue,
                 LocalDate.now(),
                 "A current account",
+                LocalDate.now(),
                 AccountType.CURRENT_ACCOUNT,
                 0,
-                LocalDate.now(),
                 Set.of()
         );
 
@@ -57,9 +57,9 @@ class AccountTest {
                 new Money (200_000.0, AR),
                 null,
                 "Current account of Mr Ilo",
+                usedDate,
                 AccountType.CURRENT_ACCOUNT,
                 1,
-                usedDate,
                 Set.of()
         );
 

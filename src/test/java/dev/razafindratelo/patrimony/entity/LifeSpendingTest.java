@@ -1,7 +1,6 @@
 package dev.razafindratelo.patrimony.entity;
 
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.Set;
 import static dev.razafindratelo.patrimony.entity.DeviseType.ARIARY;
@@ -20,9 +19,9 @@ class LifeSpendingTest {
                 new Money (200_000.0, AR),
                 null,
                 "Current account of Mr Ilo",
+                usedDate,
                 AccountType.CURRENT_ACCOUNT,
                 1,
-                usedDate,
                 Set.of()
         );
 

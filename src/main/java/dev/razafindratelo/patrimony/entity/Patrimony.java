@@ -2,12 +2,16 @@ package dev.razafindratelo.patrimony.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@ToString
 public class Patrimony {
     private Agent owner;
     private LocalDate atTheDate;
@@ -21,7 +25,8 @@ public class Patrimony {
 
     public Patrimony futureProjection(LocalDate futureDate) {
         Set<Possession> projectedPossessions = new HashSet<>(this.possessions);
-        projectedPossessions.forEach(p -> p.futureProjection(futureDate));
+        projectedPossessions = projectedPossessions.stream().map(p -> p.futureProjection(futureDate))
+                .collect(Collectors.toSet());
 
         setAtTheDate(futureDate);
         setPossessions(projectedPossessions);
@@ -38,7 +43,6 @@ public class Patrimony {
                 .reduce(zero, Money::add);
 
         return totalValue.getMontant();
-
     }
 
 }

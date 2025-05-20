@@ -4,27 +4,23 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
-public final class Account extends Possession {
+public final class Account extends Funds {
     private final AccountType accountType;
     private final double interestRate;
-    private final LocalDate creationDate;
     private Set<LifeSpending> financedLifeSpending;
 
-    public Account(String name, Money value, LocalDate atTheDate, String description, AccountType accountType, double interestRate, LocalDate creationDate, Set<LifeSpending> financedLifeSpending) {
-        super(name, value, atTheDate, description);
+    public Account(String name, Money value, LocalDate atTheDate, String description, LocalDate creationDate, AccountType accountType, double interestRate, Set<LifeSpending> financedLifeSpending) {
+        super(name, value, atTheDate, description, creationDate);
         this.accountType = accountType;
         this.interestRate = interestRate;
-        this.creationDate = creationDate;
         this.financedLifeSpending = financedLifeSpending;
     }
-
 
     public Account deposit(Money money, LocalDate atTheDate) {
         if (money.getMontant() < 0 ) throw new IllegalArgumentException("Money must be greater than zero");
@@ -36,9 +32,9 @@ public final class Account extends Possession {
                 finalAmount,
                 atTheDate,
                 getDescription(),
+                getCreationDate(),
                 this.accountType,
                 this.interestRate,
-                this.creationDate,
                 this.financedLifeSpending
         );
     }
@@ -51,9 +47,9 @@ public final class Account extends Possession {
                 finalAmount,
                 atTheDate,
                 getDescription(),
+                getCreationDate(),
                 this.accountType,
                 this.interestRate,
-                this.creationDate,
                 this.financedLifeSpending
         );
     }
@@ -68,10 +64,10 @@ public final class Account extends Possession {
     public Possession futureProjection(LocalDate futureValue) {
         var zero = Money.zeroValueOf(getValue().getDevise());
 
-        if (futureValue.isBefore(creationDate))
+        if (futureValue.isBefore(getCreationDate()))
             return new Material(getName(), zero, futureValue, getDescription(), getInterestRate(), getCreationDate());
 
-        int differenceBetweenYear = futureValue.getYear() - creationDate.getYear();
+        int differenceBetweenYear = futureValue.getYear() - getCreationDate().getYear();
 
         var lifeSpendingTotalValue = financedLifeSpending.stream().map(lf -> lf.futureProjection(futureValue).getValue())
                 .reduce(zero, Money::add);
@@ -89,9 +85,9 @@ public final class Account extends Possession {
                     finalTotalAmount,
                     futureValue,
                     getDescription(),
+                    getCreationDate(),
                     accountType,
                     interestRate,
-                    creationDate,
                     this.financedLifeSpending
             );
         }
@@ -101,9 +97,9 @@ public final class Account extends Possession {
                 getValue().subtract(lifeSpendingTotalValue),
                 futureValue,
                 getDescription(),
+                getCreationDate(),
                 accountType,
                 interestRate,
-                creationDate,
                 this.financedLifeSpending
         );
     }
