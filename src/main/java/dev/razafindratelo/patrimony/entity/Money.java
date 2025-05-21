@@ -1,10 +1,8 @@
 package dev.razafindratelo.patrimony.entity;
 
-import dev.razafindratelo.patrimony.mapper.MoneyConvertor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
@@ -23,22 +21,38 @@ public class Money {
     }
 
     public Money add(Money money) {
-        Money finalAmount = MoneyConvertor.convertMoney(money, this.devise);
+        Money finalAmount = convertMoney(money, this.devise);
         return new Money(
                 finalAmount.getMontant() + this.montant,
                 this.devise
         );
     }
 
-    public Money multiply(int multiplier) {
+    public static Money convertMoney(Money subjectMoney, Devise targetDevise) {
+        if (subjectMoney.getDevise() == null) throw new IllegalArgumentException("Subject money can't be null");
+        if (targetDevise == null) throw new IllegalArgumentException("Target devise can't be null");
+        if (targetDevise.equals(subjectMoney.getDevise())) return subjectMoney;
+
+        Money newValue = subjectMoney.multiply(subjectMoney.getDevise().getName().getAriaryValue())
+                .divide(targetDevise.getName().getAriaryValue());
+
+
+        return new Money(newValue.getMontant(), targetDevise);
+    }
+
+    public Money multiply(double multiplier) {
         return new Money(
                 this.montant * multiplier,
                 this.devise
         );
     }
 
+    public Money divide(double multiplier) {
+        return this.multiply(1 / multiplier);
+    }
+
     public Money subtract(Money money) {
-        Money finalAmount = MoneyConvertor.convertMoney(money, this.devise);
+        Money finalAmount = convertMoney(money, this.devise);
 
         return new Money(
                 this.montant - finalAmount.getMontant(),

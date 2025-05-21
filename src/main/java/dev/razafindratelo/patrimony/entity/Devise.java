@@ -1,13 +1,11 @@
 package dev.razafindratelo.patrimony.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Devise {
     private DeviseType name;
     private String description;

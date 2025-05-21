@@ -2,7 +2,6 @@ package dev.razafindratelo.patrimony.entity;
 
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
